@@ -1,10 +1,22 @@
 package kz.epam.principles.model;
 
-public enum DuckType {
-    
-    LIVE("live"),
-    TOY("toy");
-    
+import kz.epam.principles.factory.DuckCreator;
+
+public enum DuckType implements DuckCreator {
+
+    LIVE("live") {
+                @Override
+                public MovableDuck getDuck(DuckType duckType) {
+                   return new LiveDuck();
+                }
+            },
+    TOY("toy") {
+                @Override
+                public MovableDuck getDuck(DuckType duckType) {
+                    return new ToyDuck();
+                }
+            };
+
     private final String value;
 
     DuckType(String value) {
@@ -22,5 +34,5 @@ public enum DuckType {
             }
         }
         return null;
-    }       
+    }
 }

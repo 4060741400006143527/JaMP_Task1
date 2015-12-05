@@ -1,20 +1,21 @@
 package kz.epam.principles.model;
 
 import kz.epam.principles.behavior.Location;
-import org.apache.log4j.Logger;
 import kz.epam.principles.behavior.Command;
 import kz.epam.principles.behavior.EnegryChecker;
+import kz.epam.principles.behavior.Position;
+import kz.epam.principles.behavior.WalkBehavior;
 import kz.epam.principles.behavior.exception.NotEnoughEnergyException;
 import kz.epam.principles.behavior.exception.UnsupportedMovementException;
 
-public class LiveDuck extends Duck {
-
-    public final Logger LOGGER = Logger.getLogger(LiveDuck.class);
+public class LiveDuck extends MovableDuck {
 
     @Override
     public void move(Location location, Command command) throws NotEnoughEnergyException, UnsupportedMovementException {
 
-        energy = EnegryChecker.checkEnergy(position.getPosition(), position.isFailedStep());
+        Position position = getPosition();
+        boolean energy = EnegryChecker.checkEnergy(position.getStepCount(), position.isFailedStep());
+        position.setLocation(location);
 
         if (energy == false) {
             position.setFailedStep(true);
@@ -28,7 +29,7 @@ public class LiveDuck extends Duck {
                 break;
             case LAND:
                 position.changePosition(command);
-                walk(command);
+                WalkBehavior.walk(command);
                 break;
             case WATER:
                 position.changePosition(command);
@@ -40,12 +41,12 @@ public class LiveDuck extends Duck {
     }
 
     @Override
-    public void eat(Location location) {
-        if (Location.WATER.equals(location)) {
+    public void eat() {
+        if (Location.WATER.equals(getPosition().getLocation())) {
             LOGGER.info("I'm drinking");
         }
         LOGGER.info("I'm eating");
-        energy = true;
+        setEnergy(true);
     }
 
     private void fly(Command command) throws NotEnoughEnergyException {
@@ -55,5 +56,4 @@ public class LiveDuck extends Duck {
     private void swim(Command command) throws NotEnoughEnergyException {
         LOGGER.info("I'm swimming");
     }
-
 }

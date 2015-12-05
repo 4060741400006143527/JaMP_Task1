@@ -3,18 +3,19 @@ package kz.epam.principles.model;
 import kz.epam.principles.behavior.Location;
 import kz.epam.principles.behavior.Command;
 import kz.epam.principles.behavior.EnegryChecker;
+import kz.epam.principles.behavior.Position;
+import kz.epam.principles.behavior.WalkBehavior;
 import kz.epam.principles.behavior.exception.NotEnoughEnergyException;
 import kz.epam.principles.behavior.exception.UnsupportedMovementException;
-import org.apache.log4j.Logger;
 
-public class ToyDuck extends Duck {
-    
-    public final Logger LOGGER = Logger.getLogger(ToyDuck.class);
+public class ToyDuck extends MovableDuck {
 
     @Override
     public void move(Location location, Command command) throws NotEnoughEnergyException, UnsupportedMovementException {
 
-        energy = EnegryChecker.checkEnergy(position.getPosition(), position.isFailedStep());
+        Position position = getPosition();
+        boolean energy = EnegryChecker.checkEnergy(position.getStepCount(), position.isFailedStep());
+        position.setLocation(location);
 
         if (energy == false) {
             position.setFailedStep(true);
@@ -29,7 +30,7 @@ public class ToyDuck extends Duck {
                 position.changePosition(command);
                 break;
             case LAND:
-                walk(command);
+                WalkBehavior.walk(command);
                 position.changePosition(command);
                 break;
             default:
@@ -38,9 +39,9 @@ public class ToyDuck extends Duck {
     }
 
     @Override
-    public void eat(Location location) {
+    public void eat() {
         LOGGER.info("I have changed a battery");
-        energy = true;
+        setEnergy(true);
     }
 
     private void fly(Command command) throws NotEnoughEnergyException {
