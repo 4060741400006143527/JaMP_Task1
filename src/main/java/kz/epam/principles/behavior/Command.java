@@ -13,10 +13,6 @@ public enum Command {
         this.value = value;
     }
 
-    public int getValue() {
-        return value;
-    }
-
     public static Command getByValue(int value) {
         for (Command command : values()) {
             if (command.value == value) {
@@ -24,9 +20,5 @@ public enum Command {
             }
         }
         return null;
-    }
-
-    public static Command getRandom() {
-        return values()[(int) (Math.random() * values().length)];
     }
 }

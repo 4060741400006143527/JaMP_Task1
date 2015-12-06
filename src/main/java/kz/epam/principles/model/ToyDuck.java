@@ -11,7 +11,8 @@ import kz.epam.principles.behavior.exception.UnsupportedMovementException;
 public class ToyDuck extends MovableDuck {
 
     @Override
-    public void move(Location location, Command command) throws NotEnoughEnergyException, UnsupportedMovementException {
+    public void move(Location location, Command command) 
+            throws NotEnoughEnergyException, UnsupportedMovementException {
 
         Position position = getPosition();
         boolean energy = EnegryChecker.checkEnergy(position.getStepCount(), position.isFailedStep());
@@ -22,7 +23,7 @@ public class ToyDuck extends MovableDuck {
             for (int i = 0; i < 5; i++) {
                 quack();
             }
-            throw new NotEnoughEnergyException();
+            throw new NotEnoughEnergyException("The battery has sat. Movement is impossible");
         }
         switch (location) {
             case AIR:
@@ -34,7 +35,7 @@ public class ToyDuck extends MovableDuck {
                 position.changePosition(command);
                 break;
             default:
-                throw new UnsupportedMovementException();
+                throw new UnsupportedMovementException("This type of the duck can't do this action");
         }
     }
 
@@ -45,6 +46,6 @@ public class ToyDuck extends MovableDuck {
     }
 
     private void fly(Command command) throws NotEnoughEnergyException {
-        LOGGER.info("I'm flittering with wings");
+        LOGGER.info("I'm flittering with wings and moving to " + command);
     }
 }

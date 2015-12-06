@@ -14,7 +14,8 @@ public abstract class MovableDuck {
     private Position position = new Position();
     private boolean energy = true;
 
-    public abstract void move(Location location, Command command) throws NotEnoughEnergyException, UnsupportedMovementException;
+    public abstract void move(Location location, Command command) 
+            throws NotEnoughEnergyException, UnsupportedMovementException;
 
     public abstract void eat();
 

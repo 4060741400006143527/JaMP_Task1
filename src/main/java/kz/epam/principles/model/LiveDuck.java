@@ -11,7 +11,8 @@ import kz.epam.principles.behavior.exception.UnsupportedMovementException;
 public class LiveDuck extends MovableDuck {
 
     @Override
-    public void move(Location location, Command command) throws NotEnoughEnergyException, UnsupportedMovementException {
+    public void move(Location location, Command command) 
+            throws NotEnoughEnergyException, UnsupportedMovementException {
 
         Position position = getPosition();
         boolean energy = EnegryChecker.checkEnergy(position.getStepCount(), position.isFailedStep());
@@ -19,7 +20,7 @@ public class LiveDuck extends MovableDuck {
 
         if (energy == false) {
             position.setFailedStep(true);
-            throw new NotEnoughEnergyException();
+            throw new NotEnoughEnergyException("Hungry duck. Movement is impossible");
         }
 
         switch (location) {
@@ -44,16 +45,17 @@ public class LiveDuck extends MovableDuck {
     public void eat() {
         if (Location.WATER.equals(getPosition().getLocation())) {
             LOGGER.info("I'm drinking");
-        }
-        LOGGER.info("I'm eating");
+        }else{
+            LOGGER.info("I'm eating");
+        }        
         setEnergy(true);
     }
 
     private void fly(Command command) throws NotEnoughEnergyException {
-        LOGGER.info("I'm flying");
+        LOGGER.info("I'm flying to " + command);
     }
 
     private void swim(Command command) throws NotEnoughEnergyException {
-        LOGGER.info("I'm swimming");
+        LOGGER.info("I'm swimming to " + command);
     }
 }

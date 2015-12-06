@@ -1,59 +1,95 @@
 package kz.epam.principles.maze;
 
+import kz.epam.principles.behavior.Command;
+import kz.epam.principles.behavior.Location;
+import kz.epam.principles.behavior.exception.NotEnoughEnergyException;
+import kz.epam.principles.behavior.exception.UnsupportedMovementException;
+import kz.epam.principles.model.MovableDuck;
+import org.apache.log4j.Logger;
+
 public class MazeSolver {
 
-    int[][] maze;
+    public final Logger LOGGER = Logger.getLogger(MazeSolver.class);
 
-    public MazeSolver(int[][] maze) {
+    private final String[][] maze;
+    private final MovableDuck duck;
+
+    public MazeSolver(String[][] maze, MovableDuck duck) {
         this.maze = maze;
+        this.duck = duck;
     }
 
-    public void printMaze() {
+    public void solve(Location location) throws UnsupportedMovementException {
+        printMaze();
 
-        System.out.println();
-
-        for (int[] row : maze) {
-            for (int column = 0; column < row.length; column++) {
-                System.out.print(row[column]);
-            }
-            System.out.println();
+        if (solve(0, 0, location)) {
+            System.out.println("Maze solved!");
+        } else {
+            System.out.println("No solution");
         }
+        printMaze();
 
-        System.out.println();
     }
 
-    public boolean solve(int row, int column) {
-        boolean done = false;
+    public boolean solve(int row, int column, Location location) throws UnsupportedMovementException {
+        boolean isSolved = false;
         if (isValid(row, column)) {
-            maze[row][column] = 3;  // This way has been tried
-            if (row == maze.length - 1 && column == maze[0].length - 1) {
-                done = true;  // maze is solved
+
+            if ("X".equals(maze[row][column])) {
+                isSolved = true;
             } else {
-                done = solve(row + 1, column);  // Down
-                if (!done) {
-                    done = solve(row, column + 1);  // Right
-                }
-                if (!done) {
-                    done = solve(row - 1, column);  // Up
-                }
-                if (!done) {
-                    done = solve(row, column - 1);  // Left
+                maze[row][column] = "-";  // This way has been tried
+                moveDuck(row, column, location, Command.DOWN);
+                isSolved = solve(row + 1, column, location);
+                if (!isSolved) {
+                    moveDuck(row, column, location, Command.RIGHT);
+                    isSolved = solve(row, column + 1, location);
+                    if (!isSolved) {
+                        moveDuck(row, column, location, Command.UP);
+                        isSolved = solve(row - 1, column, location);
+                    }
+                    if (!isSolved) {
+                        moveDuck(row, column, location, Command.LEFT);
+                        isSolved = solve(row, column - 1, location);
+                    }
                 }
             }
-            if (done) {
-                maze[row][column] = 7; // Successful way
+            if (isSolved) {
+                maze[row][column] = "*"; // Successful way
             }
         }
-        return done;
+        return isSolved;
     }
 
     private boolean isValid(int row, int column) {
         boolean result = false;
         if (row >= 0 && row < maze.length && column >= 0 && column < maze[0].length) {
-            if (maze[row][column] == 1) {
+            if ("0".equals(maze[row][column]) || "X".equals(maze[row][column])) {
                 result = true;
             }
         }
         return result;
+    }
+
+    private void moveDuck(int row, int column, Location location, Command command) 
+            throws UnsupportedMovementException {
+        try {
+            duck.move(location, command);
+        } catch (NotEnoughEnergyException ex) {
+            LOGGER.error(ex.getMessage());
+            duck.eat();
+            solve(row, column, location);
+        }
+    }
+
+    public void printMaze() {
+        System.out.println();
+        for (String[] row : maze) {
+            for (String column : row) {
+                System.out.print(column);
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 }
