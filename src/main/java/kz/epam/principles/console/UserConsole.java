@@ -15,7 +15,7 @@ public class UserConsole {
         DuckType duckType = null;
         while (duckType == null) {
             String inputParameter = scanner.nextLine();
-            isExit(inputParameter);
+            performExitIfNeeded(inputParameter);
             duckType = DuckType.getByValue(inputParameter);
             if (duckType == null) {
                 System.out.println("Incorrect duck type. Please, try again. "
@@ -31,7 +31,7 @@ public class UserConsole {
         Location location = null;
         while (location == null) {
             String inputParameter = scanner.nextLine();
-            isExit(inputParameter);
+            performExitIfNeeded(inputParameter);
             location = Location.getByValue(inputParameter);
             if (location == null) {
                 System.out.println("Incorrect location. Please, try again. "
@@ -47,7 +47,7 @@ public class UserConsole {
         Command command = null;
         while (command == null) {
             String inputParameter = scanner.nextLine();
-            isExit(inputParameter);
+            performExitIfNeeded(inputParameter);
             command = Command.getByValue(Integer.valueOf(inputParameter));
             if (command == null) {
                 System.out.println("Incorrect command. Please, try again. "
@@ -60,7 +60,7 @@ public class UserConsole {
     public boolean readEatCommand() {
         String inputParameter = scanner.nextLine();
         while (!isFeed(inputParameter)) {
-            isExit(inputParameter);
+            performExitIfNeeded(inputParameter);
             if (isFeed(inputParameter)) {
                 return true;
             } else {
@@ -78,7 +78,7 @@ public class UserConsole {
         Action action = null;
         while (action == null) {
             String inputParameter = scanner.nextLine();
-            isExit(inputParameter);
+            performExitIfNeeded(inputParameter);
 
             if (null != inputParameter) {
                 switch (inputParameter) {
@@ -99,7 +99,7 @@ public class UserConsole {
         return action;
     }
 
-    private static void isExit(String inputParameter) {
+    private static void performExitIfNeeded(String inputParameter) {
         if ("exit".equals(inputParameter)) {
             System.exit(0);
         }
