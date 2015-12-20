@@ -9,13 +9,13 @@ public enum DuckType implements DuckFactory {
 
     LIVE("live") {
                 @Override
-                public MovableDuck getDuck(DuckType duckType) {
+                public MovableDuck getDuck() {
                     return new LiveDuck();
                 }
             },
     TOY("toy") {
                 @Override
-                public MovableDuck getDuck(DuckType duckType) {
+                public MovableDuck getDuck() {
                     return new ToyDuck();
                 }
             };

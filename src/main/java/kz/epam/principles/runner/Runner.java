@@ -5,7 +5,6 @@ import kz.epam.principles.behavior.Location;
 import kz.epam.principles.behavior.exception.NotEnoughEnergyException;
 import kz.epam.principles.behavior.exception.UnsupportedMovementException;
 import kz.epam.principles.console.UserConsole;
-import kz.epam.principles.factory.Ducks;
 import kz.epam.principles.maze.MazeReader;
 import kz.epam.principles.maze.MazeSolver;
 import kz.epam.principles.model.MovableDuck;
@@ -20,7 +19,7 @@ public class Runner {
 
         UserConsole console = new UserConsole();
         DuckType duckType = console.readDuckType();
-        MovableDuck duck = Ducks.getDuck(duckType);
+        MovableDuck duck = duckType.getDuck();
 
         Location location = console.readLocation();
         try {
